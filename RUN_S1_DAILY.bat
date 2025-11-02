@@ -16,7 +16,7 @@ cd /d "%~dp0"
 
 REM Step 1: 시가총액 기준 유니버스 업데이트
 echo [1/2] marketcap_universe.xlsx 업데이트 중...
-"C:\Program Files (x86)\Python311\python.exe" Daily_MarketCap_Tracker.py --appkey IweTdkYa8JWDUOa8NohVSVeOiJ1THDGd_2x050A8XcU --secret eazu-jPNJpAsIVkaUTh3_88gUvXrCMJCwGF2AYRtBJs
+python Daily_MarketCap_Tracker.py --appkey IweTdkYa8JWDUOa8NohVSVeOiJ1THDGd_2x050A8XcU --secret eazu-jPNJpAsIVkaUTh3_88gUvXrCMJCwGF2AYRtBJs
 
 if %ERRORLEVEL% neq 0 (
     echo ERROR: Daily Market Cap Tracker failed!
@@ -27,7 +27,7 @@ if %ERRORLEVEL% neq 0 (
 echo.
 echo ========================================
 echo [2/2] trading_signals_s1.xlsx 업데이트 중...
-"C:\Program Files (x86)\Python311\python.exe" Trading_Signal_System_S1.py --appkey IweTdkYa8JWDUOa8NohVSVeOiJ1THDGd_2x050A8XcU --secret eazu-jPNJpAsIVkaUTh3_88gUvXrCMJCwGF2AYRtBJs --alert-threshold 10.0
+python Trading_Signal_System_S1.py --appkey IweTdkYa8JWDUOa8NohVSVeOiJ1THDGd_2x050A8XcU --secret eazu-jPNJpAsIVkaUTh3_88gUvXrCMJCwGF2AYRtBJs --alert-threshold 10.0
 
 if %ERRORLEVEL% neq 0 (
     echo ERROR: Trading Signal System S1 failed!
