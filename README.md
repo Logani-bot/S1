@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # S1 Trading System
 
 시가총액 기반 주식 트레이딩 시스템
@@ -90,3 +91,7 @@ S1/
 
 Private
 
+=======
+# S1
+S1 
+>>>>>>> aef0ade7554fd192baa4e2ef3bb2af5994b53ff5
