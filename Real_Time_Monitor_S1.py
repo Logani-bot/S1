@@ -349,7 +349,7 @@ def load_summary_stocks_with_buy_lines() -> pd.DataFrame:
     Summary 탭에서 모니터링 대상 종목과 매수선 로드
     
     Returns:
-        DataFrame with columns: 티커, 종목명, 매수상태, 1차매수선, 2차매수선, 3차매수선
+        DataFrame with columns: 티커, 종목명, 매수상태, 1차매수선(익일), 2차매수선(익일), 3차매수선(익일)
     """
     try:
         if not Path(SIGNAL_FILE).exists():
@@ -362,8 +362,8 @@ def load_summary_stocks_with_buy_lines() -> pd.DataFrame:
             logger.info("ℹ Summary 탭에 종목이 없습니다.")
             return pd.DataFrame()
         
-        # 필요한 컬럼만 선택
-        required_columns = ['티커', '종목명', '매수상태', '1차매수선', '2차매수선', '3차매수선']
+        # 실제 Excel 컬럼 이름 사용
+        required_columns = ['티커', '종목명', '매수상태', '1차매수선(익일)', '2차매수선(익일)', '3차매수선(익일)']
         
         # 컬럼 존재 확인
         missing_columns = [col for col in required_columns if col not in df.columns]
@@ -373,6 +373,13 @@ def load_summary_stocks_with_buy_lines() -> pd.DataFrame:
         
         # 필요한 컬럼만 추출
         df_filtered = df[required_columns].copy()
+        
+        # 컬럼 이름을 단순화 (내부 처리용)
+        df_filtered.rename(columns={
+            '1차매수선(익일)': '1차매수선',
+            '2차매수선(익일)': '2차매수선',
+            '3차매수선(익일)': '3차매수선'
+        }, inplace=True)
         
         # 매수선이 유효한 종목만 필터링
         df_filtered = df_filtered.dropna(subset=['1차매수선', '2차매수선', '3차매수선'])
