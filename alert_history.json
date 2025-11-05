@@ -1,0 +1,21 @@
+{
+  "date": "2025-11-05",
+  "alerts": {
+    "003570": {
+      "READY_BUY1_5%": true,
+      "READY_BUY1_3%": true,
+      "READY_BUY1_1%": true
+    },
+    "253450": {
+      "READY_BUY1_3%": true
+    },
+    "439260": {
+      "READY_BUY1_5%": true,
+      "READY_BUY1_3%": true,
+      "READY_BUY1_1%": true
+    },
+    "103140": {
+      "READY_BUY1_5%": true
+    }
+  }
+}

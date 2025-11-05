@@ -247,15 +247,30 @@ def send_daily_report(alerts: List[dict], total_stocks: int, recipients: List[st
         
         message += "\n"
     
-    send_telegram_message(message, recipients)
+    # 텔레그램 메시지 전송
+    telegram_success = send_telegram_message(message, recipients)
+    
+    # Slack 메시지 전송 (선택적)
+    slack_success = False
+    try:
+        from slack_notifier import send_slack_daily_report
+        slack_success = send_slack_daily_report(alerts, total_stocks, system_label=system_label)
+    except ImportError:
+        # slack_notifier 모듈이 없으면 무시
+        pass
+    except Exception as e:
+        logger.warning(f"Slack 일일 리포트 전송 실패 (무시): {e}")
+    
+    return telegram_success or slack_success
 
 
 def send_realtime_alert(alert_type: str, stock_name: str, ticker: str, 
                        current_price: float, target_price: float, 
                        distance_pct: float, recipients: List[str] = None,
-                       sell_prices: dict = None, system_label: str = "S2"):
+                       sell_prices: dict = None, system_label: str = "S2",
+                       low_price: float = None):
     """
-    실시간 알람 전송
+    실시간 알람 전송 (텔레그램 + Slack)
     
     Args:
         alert_type: "1차 매수선 5% 인접", "2차 매수선 5% 인접", "1차 매수 체결" 등
@@ -302,7 +317,31 @@ def send_realtime_alert(alert_type: str, stock_name: str, ticker: str,
         message += f"7% 매도가: {int(round(sell_prices.get('sell3', 0))):,}원\n"
         message += f"───────────\n"
     
-    send_telegram_message(message, recipients)
+    # 텔레그램 메시지 전송
+    telegram_success = send_telegram_message(message, recipients)
+    
+    # Slack 메시지 전송 (선택적)
+    slack_success = False
+    try:
+        from slack_notifier import send_slack_realtime_alert
+        slack_success = send_slack_realtime_alert(
+            alert_type=alert_type,
+            stock_name=stock_name,
+            ticker=ticker,
+            current_price=current_price,
+            target_price=target_price,
+            distance_pct=distance_pct,
+            sell_prices=sell_prices,
+            system_label=system_label,
+            low_price=low_price
+        )
+    except ImportError:
+        # slack_notifier 모듈이 없으면 무시
+        pass
+    except Exception as e:
+        logger.warning(f"Slack 알림 전송 실패 (무시): {e}")
+    
+    return telegram_success or slack_success
 
 
 def send_error_alert(error_message: str, script_name: str = None, recipients: List[str] = None):

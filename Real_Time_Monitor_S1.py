@@ -1056,16 +1056,26 @@ def main():
                 trading_info = get_trading_day_info()
                 if not trading_info['is_trading_day']:
                     logger.info(f"\n[사이클 {cycle_count}] 비거래일입니다 ({trading_info['reason']})")
+                    logger.info("모니터링 종료 - 비거래일")
+                    break
                 else:
                     logger.info(f"\n[사이클 {cycle_count}] 모니터링 시간대가 아닙니다 (거래일 08:00-20:00)")
-                
-                logger.info(f"⏰ {base_interval}초 후 재확인...")
-                logger.info("강제 실행하려면 --force 옵션을 사용하세요.")
-                time.sleep(base_interval)
-                continue
+                    # 20:00 이후면 종료
+                    if current_time.time() >= MONITORING_END_TIME:
+                        logger.info("장 시간 종료 - 모니터링 종료")
+                        break
+                    # 08:00 이전이면 대기
+                    logger.info(f"⏰ {base_interval}초 후 재확인...")
+                    logger.info("강제 실행하려면 --force 옵션을 사용하세요.")
+                    time.sleep(base_interval)
+                    continue
         else:
             # 강제 실행 모드에서는 시간대만 체크
             if not is_monitoring_time(force_mode=True):
+                # 20:00 이후면 종료
+                if current_time.time() >= MONITORING_END_TIME:
+                    logger.info("장 시간 종료 - 모니터링 종료")
+                    break
                 logger.info(f"\n[사이클 {cycle_count}] 모니터링 시간대가 아닙니다 (08:00-20:00)")
                 logger.info(f"⏰ {base_interval}초 후 재확인...")
                 time.sleep(base_interval)

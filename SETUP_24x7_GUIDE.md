@@ -128,3 +128,4 @@ Get-Content realtime_monitor_$(Get-Date -Format "yyyyMMdd").log -Wait -Tail 20
 
 **24/7 자동 감시 시스템이 준비되었습니다!** 🎉
 
+
